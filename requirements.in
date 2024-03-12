@@ -1,0 +1,10 @@
+# core
+fastapi
+jinja2
+python-multipart
+uvicorn[standard]
+
+
+# dev
+pdbpp
+black
