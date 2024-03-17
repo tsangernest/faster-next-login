@@ -1,20 +1,12 @@
 from typing import Annotated
 
-from fastapi import (
-    Depends,
-    FastAPI,
-    HTTPException,
-    Request,
-)
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.openapi.models import EmailStr
 from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
-from starlette.status import (
-    HTTP_401_UNAUTHORIZED,
-    HTTP_400_BAD_REQUEST,
-)
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
 
 
 # application setup
@@ -77,9 +69,7 @@ def get_user(db, username: str) -> User:
 
 
 def fake_decode_token(token) -> User:
-    user = get_user(db=fake_db,
-                    username=token)
-
+    user = get_user(db=fake_db, username=token)
     return user
 
 
