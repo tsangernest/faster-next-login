@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <title>faster-next-login</title>
 
-  <form method="POST">
+  <form method="POST" id="loginData">
     <div class="container">
       <p><label><b>Username</b></label>
-      <input type="text" name="uname">
+      <input type="text" id="username" name="username">
 
       <p><label><b>Password</b></label>
-      <input type="password" name="psw">
+      <input type="password" id="password" name="password">
 
-      <p><button type="submit">Login</button>
+      <p><button type="submit" id="submit-btn">Login</button>
     </div>
   </form>
 </head>
@@ -24,13 +24,30 @@
 
 <script>
 
+const formData = document.getElementById("loginData");
 
+formData.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const data = new FormData(formData);
+
+  try {
+    response = await fetch(
+      "/token",
+      {
+        method: "POST",
+        body: data,
+      },
+    );
+    console.log(response);
+    const responseData = await response.json();
+
+    console.log(responseData)
+
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 </script>
 
-
-<style>
-
-
-
-</style>

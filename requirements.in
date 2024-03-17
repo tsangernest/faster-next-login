@@ -3,6 +3,7 @@ fastapi
 jinja2
 python-multipart
 uvicorn[standard]
+email-validator
 
 
 # dev
