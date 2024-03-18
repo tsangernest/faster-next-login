@@ -12,7 +12,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
 # application setup
 app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-template = Jinja2Templates(directory="../frontend")
+template = Jinja2Templates(directory="frontend/")
 
 
 fake_db: dict = {
@@ -69,7 +69,11 @@ def get_user(db, username: str) -> User:
 
 
 def fake_decode_token(token) -> User:
-    user = get_user(db=fake_db, username=token)
+    user = get_user(
+        db=fake_db,
+        username=token,
+    )
+
     return user
 
 
