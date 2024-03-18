@@ -4,6 +4,11 @@ FROM python:3.12.1-slim
 WORKDIR /code
 
 
+ENV VIRTUAL_ENV=/var/venv/
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+
 COPY ./requirements.txt /code/requirements.txt
 
 
