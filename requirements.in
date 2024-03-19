@@ -1,11 +1,18 @@
 # core
+email-validator
 fastapi
 jinja2
 python-multipart
 uvicorn[standard]
-email-validator
+
+
+# db
+aiosqlite
+alembic
+sqlmodel
 
 
 # dev
-pdbpp
 black
+pdbpp
+
