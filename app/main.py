@@ -1,11 +1,11 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.openapi.models import EmailStr
 from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel
+from sqlmodel import SQLModel, Field
 from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
 
 
@@ -44,7 +44,9 @@ fake_db: dict = {
 
 
 # models
-class User(BaseModel):
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
     first_name: str
     last_name: str
     username: str
