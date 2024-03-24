@@ -1,7 +1,6 @@
 from typing import Annotated, Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Request
-from fastapi.openapi.models import EmailStr
 from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
@@ -50,7 +49,7 @@ class User(SQLModel, table=True):
     first_name: str
     last_name: str
     username: str
-    email: EmailStr
+    email: str = Field(default=None, unique=True)
     is_active: bool
 
 

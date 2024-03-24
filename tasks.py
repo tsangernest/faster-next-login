@@ -26,7 +26,6 @@ def startapp(c, rebuild=True):
     cmd = (f"docker run "
            f"--detach "
            f"--name {_CONTAINER_NAME} "
-           f"--rm "
            f"-p 80:80 fastapi:latest")
     c.run(cmd)
 

@@ -28,5 +28,11 @@ async def get_async_session() -> AsyncSession:
     )
 
     async with async_session() as session:
-        yield session
+        try:
+            yield session
+        except Exception as e:
+            print(e)
+
+
+Session: AsyncSession = get_async_session()
 

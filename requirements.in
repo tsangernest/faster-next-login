@@ -1,7 +1,8 @@
 # core
-email-validator
 fastapi
+fastapi-utils
 jinja2
+pydantic[email]
 python-multipart
 uvicorn[standard]
 
