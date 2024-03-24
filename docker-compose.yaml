@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE="mydatabase"
+      - MYSQL_USER="root"
+      - MYSQL_PASSWORD=""
+      - MYSQL_ROOT_PASSWORD=""
+      - MYSQL_HOST=""
+    volumes:
+      - /tmp/app/mysqld:/var/run/mysqld
+      - ./db:/var/lib/msql
+
+  fastapi:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - /tmp/app/mysqld:/run/mysqld
