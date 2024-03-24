@@ -18,25 +18,36 @@ def exec(c, target: str = f"/bin/bash"):
 
 
 @task
-def startapp(c, rebuild=True):
-
-    if rebuild:
-        build(c)
-
-    cmd = (f"docker run "
-           f"--detach "
-           f"--name {_CONTAINER_NAME} "
-           f"-p 80:80 fastapi:latest")
-    c.run(cmd)
+def startapp(c):
+    c.run(f"docker compose up")
 
 
 @task
 def down(c):
-    cmd = f"docker kill {_CONTAINER_NAME}"
-    c.run(cmd)
+    c.run(f"docker compose down")
 
-    rm_cmd = f"docker rm {_CONTAINER_NAME}"
-    c.run(rm_cmd)
+
+# Shelving it here,
+# @task
+# def startapp(c, rebuild=True):
+#
+#     if rebuild:
+#         build(c)
+#
+#     cmd = (f"docker run "
+#            f"--detach "
+#            f"--name {_CONTAINER_NAME} "
+#            f"-p 80:80 fastapi:latest")
+#     c.run(cmd)
+#
+#
+# @task
+# def down(c):
+#     cmd = f"docker kill {_CONTAINER_NAME}"
+#     c.run(cmd)
+#
+#     rm_cmd = f"docker rm {_CONTAINER_NAME}"
+#     c.run(rm_cmd)
 
 
 @task
