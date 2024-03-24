@@ -32,7 +32,10 @@ async def get_async_session() -> AsyncSession:
             yield session
         except Exception as e:
             print(e)
+        finally:
+            session.close()
 
 
+# Packaged it nicely to use around
 Session: AsyncSession = get_async_session()
 
