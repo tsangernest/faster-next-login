@@ -1,5 +1,3 @@
-from contextlib import contextmanager
-
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -21,7 +19,6 @@ async_engine: AsyncEngine = create_async_engine(
 )
 
 
-@contextmanager
 async def get_async_session() -> AsyncSession:
     async_session = sessionmaker(
         bind=async_engine,
