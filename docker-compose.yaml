@@ -1,6 +1,9 @@
 version: "3"
 
+
 services:
+
+
   db:
     image: mysql
     ports:
@@ -14,6 +17,7 @@ services:
     volumes:
       - /tmp/app/mysqld:/var/run/mysqld
       - ./db:/var/lib/msql
+
 
   fastapi:
     build: .
