@@ -2,8 +2,8 @@ from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
     create_async_engine,
-    async_sessionmaker,
 )
+from sqlalchemy.orm import sessionmaker
 
 
 DB_URL: str = f"sqlite+aiosqlite:///./sql_app.db"
@@ -19,7 +19,7 @@ async_engine: AsyncEngine = create_async_engine(
 )
 
 async def get_async_session() -> AsyncSession:
-    async_session = async_sessionmaker(
+    async_session = sessionmaker(
         bind=async_engine,
         class_=AsyncSession,
         autoflush=False,
