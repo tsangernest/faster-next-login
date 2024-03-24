@@ -40,6 +40,6 @@ async def get_async_session() -> AsyncSession:
             session.close()
 
 
-# Packaged it nicely to use around
+# Wrapping it all together for ggez transactions
 Session: AsyncSession = get_async_session()
 
