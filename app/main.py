@@ -7,6 +7,9 @@ from fastapi.templating import Jinja2Templates
 from sqlmodel import SQLModel, Field
 from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
 
+from .database import initialize_database
+
+
 
 # application setup
 app = FastAPI()
@@ -40,6 +43,10 @@ fake_db: dict = {
         "is_active": True,
     },
 }
+
+
+async def on_startup():
+    await initialize_database()
 
 
 # models

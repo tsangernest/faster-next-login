@@ -1,4 +1,5 @@
 # core
+sqlalchemy[asyncio]
 fastapi
 fastapi-utils
 jinja2

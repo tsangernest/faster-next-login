@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import sessionmaker
+from sqlmodel import SQLModel
 
 
 DB_URL: str = f"sqlite+aiosqlite:///./sql_app.db"
@@ -19,6 +20,11 @@ async_engine: AsyncEngine = create_async_engine(
 )
 
 
+async def initialize_database():
+    async with async_engine.begin() as eng_conn:
+        await eng_conn.run_sync(SQLModel.metadata.create_all)
+
+
 async def get_async_session() -> AsyncSession:
     async_session = sessionmaker(
         bind=async_engine,
@@ -29,12 +35,7 @@ async def get_async_session() -> AsyncSession:
     )
 
     async with async_session() as session:
-        try:
-            yield session
-        except Exception as e:
-            print(e)
-        finally:
-            session.close()
+        yield session
 
 
 # Wrapping it all together for ggez transactions
