@@ -37,7 +37,3 @@ async def get_async_session() -> AsyncSession:
     async with async_session() as session:
         yield session
 
-
-# Wrapping it all together for ggez transactions
-Session: AsyncSession = get_async_session()
-

@@ -11,12 +11,38 @@ from .database import initialize_database
 
 
 
+APP_INFO: dict = {
+    "title": "faster-next-app",
+    "version": "0.0.0",
+}
+
+
 # application setup
-app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 template = Jinja2Templates(directory="frontend/")
 
 
+
+# actual db settings
+async def on_startup():
+    await initialize_database()
+
+def get_application() -> FastAPI:
+    fastapi_app = FastAPI(**APP_INFO)
+
+    fastapi_app.add_event_handler(
+        event_type="startup",
+        func=on_startup,
+    )
+
+    return fastapi_app
+
+
+# Wrapper class to package event handler nicely, init og db
+app: FastAPI = get_application()
+
+
+# fake data
 fake_db: dict = {
     "danny": {
         "first_name": "daenerys",
@@ -44,10 +70,8 @@ fake_db: dict = {
     },
 }
 
-
-async def on_startup():
-    await initialize_database()
-
+##########################
+##########################
 
 # models
 class User(SQLModel, table=True):
