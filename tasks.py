@@ -18,14 +18,17 @@ def exec(c, target: str = f"/bin/bash"):
 
 
 @task
-def startapp(c):
+def startapp(c, no_build=False):
+    if not no_build:
+        c.run(f"docker compose build --pull")
     c.run(f"docker compose up")
 
 
 @task
-def down(c):
+def down(c, hard=False):
     c.run(f"docker compose down")
-
+    if hard:
+        c.run(f"docker system prune -a")
 
 # Shelving it here,
 # @task

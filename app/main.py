@@ -1,13 +1,18 @@
 from typing import Annotated, Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Request
-from fastapi.responses import Response
+from fastapi.responses import HTMLResponse, Response
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
-from sqlmodel import SQLModel, Field
-from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from .database import initialize_database
+from sqlmodel import SQLModel, Field
+from starlette.status import (HTTP_200_OK,
+                              HTTP_400_BAD_REQUEST,
+                              HTTP_401_UNAUTHORIZED,
+                              HTTP_500_INTERNAL_SERVER_ERROR,)
+
+from .database import get_async_session, initialize_database
 
 
 
@@ -84,42 +89,28 @@ class User(SQLModel, table=True):
     is_active: bool
 
 
-class UserInDB(User):
-    hashed_pw: str
+# async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
+#     user = fake_decode_token(token=token)
+#
+#     if not user:
+#         raise HTTPException(
+#             status_code=HTTP_401_UNAUTHORIZED,
+#             detail="Invalid login credentials",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#
+#     return user
 
 
-# helpers
-def fake_pw_hash(password: str) -> str:
-    return f"fakehash{password}"
+@app.get(path="/health",
+         response_class=HTMLResponse,
+         responses={HTTP_200_OK: {"db_conn": "healthy"},
+                    HTTP_500_INTERNAL_SERVER_ERROR: {"db_conn": "ded"}})
+async def health_check(
+    session: Annotated[AsyncSession, Depends(dependency=get_async_session)],
+) -> HTMLResponse:
+    return HTMLResponse
 
-
-def get_user(db, username: str) -> User:
-    if username in db:
-        user_dict: dict = db[username]
-
-        return UserInDB(**user_dict)
-
-
-def fake_decode_token(token) -> User:
-    user = get_user(
-        db=fake_db,
-        username=token,
-    )
-
-    return user
-
-
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
-    user = fake_decode_token(token=token)
-
-    if not user:
-        raise HTTPException(
-            status_code=HTTP_401_UNAUTHORIZED,
-            detail="Invalid login credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    return user
 
 
 # routes/endpoints
@@ -136,49 +127,22 @@ async def index(request: Request) -> Response:
 @app.post(path="/token")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> dict:
 
-    user_dict = fake_db.get(form_data.username)
-    if not user_dict:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail="Invalid username/password")
+    username = fake_db.get(form_data.username)
+    if not username:
+        raise HTTPException(HTTP_400_BAD_REQUEST, "Invalid username")
 
-    user = UserInDB(**user_dict)
-
-    hashed_password = fake_pw_hash(password=form_data.password)
-    if not hashed_password:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail="Invalid username/password")
+    if not form_data.password == fake_db.get(form_data.password):
+        raise HTTPException(HTTP_400_BAD_REQUEST, "Invalid password")
 
     return {
-        "access_token": user.username,
+        "access_token": username,
         "token_type": "bearer",
     }
 
 
-@app.get(path="/users/me")
-async def read_users_me(curr_user: Annotated[User, Depends(get_current_user)]) -> User:
-    return curr_user
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# @app.get(path="/users/me")
+# async def read_users_me(curr_user: Annotated[User, Depends(get_current_user)]) -> User:
+#     return curr_user
 
 
 

@@ -1,7 +1,6 @@
 # core
-sqlalchemy[asyncio]
+sqlalchemy
 fastapi
-fastapi-utils
 jinja2
 pydantic[email]
 python-multipart
