@@ -4,6 +4,7 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, Response
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.sql import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import (HTTP_200_OK,
                               HTTP_400_BAD_REQUEST,
@@ -68,18 +69,32 @@ app: FastAPI = get_application()
                     HTTP_500_INTERNAL_SERVER_ERROR: {"db_conn": "ded"}})
 async def health_check(
     session: Annotated[AsyncSession, Depends(dependency=get_async_session)],
-):
+) -> HTMLResponse:
+
     try:
-        test_user = User(first="daenerys", last="targaryen", email="mother@dragons.ca", username="danny")
-        session.add(test_user)
+        danny = User(first=f"daenerys",
+                     last=f"targaryen",
+                     username=f"khaleesi-of-the-great-grass-sea",
+                     email=f"mother@dragons.ca")
+        session.add(danny)
         await session.commit()
     except Exception as err:
         print(f"[db_error]\n::{err=}::\n")
-        return HTMLResponse(content="ded", status_code=HTTP_500_INTERNAL_SERVER_ERROR)
+        return HTMLResponse(content="ded",
+                            status_code=HTTP_500_INTERNAL_SERVER_ERROR)
 
-    # TODO: rollback after text,
+    statement = select(User)
+    result = await session.scalars(statement)
 
-    return HTMLResponse(content="healthy", status_code=HTTP_200_OK)
+    if not result.one():
+        return HTMLResponse(content="major error yikes",
+                            status_code=HTTP_500_INTERNAL_SERVER_ERROR)
+
+    await session.execute(delete(User))
+    await session.commit()
+
+    return HTMLResponse(content="healthy",
+                        status_code=HTTP_200_OK)
 
 
 
