@@ -4,12 +4,13 @@ from invoke import task
 _CONTAINER_NAME = "fastapi"
 
 
+# not quite working
 @task
 def logs(c):
     cmd = f"docker logs -f {_CONTAINER_NAME}"
     c.run(cmd)
 
-
+# same as above cuz container name is longer for these two
 @task
 def exec(c, target: str = f"/bin/bash"):
 
@@ -53,8 +54,8 @@ def down(c, hard=False):
 #     c.run(rm_cmd)
 
 
-@task
-def build(c):
-    cmd = f"docker build -t {_CONTAINER_NAME} ."
-    c.run(cmd)
+# @task
+# def build(c):
+#     cmd = f"docker build -t {_CONTAINER_NAME} ."
+#     c.run(cmd)
 

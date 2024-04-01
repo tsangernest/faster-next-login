@@ -23,6 +23,7 @@ def get_application() -> FastAPI:
 
     return fastapi_app
 
+
 # Wrap everything nicely for app start
 app: FastAPI = get_application()
 
