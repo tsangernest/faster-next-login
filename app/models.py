@@ -1,4 +1,3 @@
-from functools import cached_property
 from typing import Optional
 
 from pydantic import EmailStr
@@ -15,8 +14,8 @@ class User(SQLModel, table=True):
     email: EmailStr = Field(unique=True, sa_type=AutoString)
     is_active: bool = True
 
-    @cached_property
-    def fullname(self) -> str:
+    @property
+    def full_name(self) -> str:
         return f"{self.first} {self.last}"
 
 
