@@ -28,10 +28,10 @@ async def health_check(
     session: Annotated[AsyncSession, Depends(get_async_session)],
 ) -> HTMLResponse:
     try:
-        dany = User(first=f"daenerys",
-                    last=f"targaryen",
-                    username=f"khaleesi",
-                    email=f"mother@dragons.ca")
+        dany = User(first="daenerys",
+                    last="targaryen",
+                    username="khaleesi",
+                    email="mother@dragons.ca")
         session.add(dany)
         await session.commit()
     except Exception as err:
