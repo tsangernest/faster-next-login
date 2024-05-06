@@ -1,16 +1,16 @@
 from typing import Annotated
 
+import requests
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.sql import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.status import (HTTP_200_OK,
-                              HTTP_400_BAD_REQUEST,
-                              HTTP_401_UNAUTHORIZED,
-                              HTTP_500_INTERNAL_SERVER_ERROR,)
+from starlette.status import (
+    HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_500_INTERNAL_SERVER_ERROR
+)
 
-from .auth import oauth2_scheme
+from .auth import OIDCSettings, oidc_scheme
 from .database import get_async_session
 from .models import User
 
@@ -61,25 +61,4 @@ async def index(request: Request) -> Response:
         media_type="text/html",
     )
 
-
-# need to transform into using models
-# @app.post(path="/token")
-# async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> dict:
-#
-#     username = fake_db.get(form_data.username)
-#     if not username:
-#         raise HTTPException(HTTP_400_BAD_REQUEST, "Invalid username")
-#
-#     if not form_data.password == fake_db.get(form_data.password):
-#         raise HTTPException(HTTP_400_BAD_REQUEST, "Invalid password")
-#
-#     return {
-#         "access_token": username,
-#         "token_type": "bearer",
-#     }
-
-
-# @app.get(path="/users/me")
-# async def read_users_me(curr_user: Annotated[User, Depends(get_current_user)]) -> User:
-#     return curr_user
 

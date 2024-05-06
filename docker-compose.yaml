@@ -1,10 +1,9 @@
-version: "3"
-
 
 services:
 
 
   db:
+    container_name: mysql
     image: mysql
     ports:
       - "3306:3306"
@@ -15,15 +14,40 @@ services:
       - MYSQL_ROOT_PASSWORD=""
       - MYSQL_HOST=""
     volumes:
-      - /tmp/app/mysqld:/var/run/mysqld
-      - ./db:/var/lib/msql
+      - /tmp/app/mysqld:/var/run/mysqld:z
+      - ./db:/var/lib/msql:z
 
 
   fastapi:
+    container_name: fastapi
     build: .
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-      - /tmp/app/mysqld:/run/mysqld
+      - /tmp/app/mysqld:/run/mysqld:z
+    depends_on:
+      - db
+
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:24.0.3
+    environment:
+      KC_LOG_LEVEL: info
+      KC_METRICS_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+    command: start-dev --verbose
+    ports:
+      - "8080:8080"
+    depends_on:
+      - fastapi
+

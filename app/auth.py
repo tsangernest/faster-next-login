@@ -1,19 +1,23 @@
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from fastapi.security import OpenIdConnect
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+class OIDCSettings:
+    base_url: str = "http://localhost:8000/realms"
+
+    client_id: str = "fastapi"
+    client_secret: str = "i19tV496HQLGQObmRCY47dId9aZEL0YN"
+
+    oidc_realm: str = "master"
 
 
-# async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
-#     user = fake_decode_token(token=token)
-#
-#     if not user:app
-#         raise HTTPException(
-#             status_code=HTTP_401_UNAUTHORIZED,
-#             detail="Invalid login credentials",
-#             headers={"WWW-Authenticate": "Bearer"},
-#         )
-#
-#     return user
+    wk_url: str = f"{base_url}/{oidc_realm}/.well-known/openid-configuration"
+    az_code_url: str = f"{base_url}/{oidc_realm}/protocol/openid-connect"
+
+
+oidc_scheme: OpenIdConnect = OpenIdConnect(
+    openIdConnectUrl=OIDCSettings.wk_url,
+    auto_error=False,
+)
+
 
 

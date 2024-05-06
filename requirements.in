@@ -4,6 +4,7 @@ fastapi
 jinja2
 pydantic[email]
 python-multipart
+requests
 uvicorn[standard]
 
 

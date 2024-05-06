@@ -13,10 +13,6 @@ class User(SQLModel, table=True):
     email: EmailStr = Field(unique=True, sa_type=AutoString)
     is_active: bool = True
 
-    @property
-    def full_name(self) -> str:
-        return f"{self.first} {self.last}"
-
 
 # fake data; not being used
 fake_db: dict = {
